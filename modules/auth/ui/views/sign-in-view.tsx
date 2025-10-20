@@ -19,8 +19,8 @@ import { Alert, AlertTitle } from "@/components/ui/alert";
 import { OctagonAlertIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
     email: z.string().email(),
@@ -49,6 +49,7 @@ const SignInView = () => {
             {
                 email: data.email,
                 password: data.password,
+                callbackURL: "/",
             },
             {
                 onSuccess: () => {
@@ -56,6 +57,26 @@ const SignInView = () => {
                     router.push("/");
                 },
                 onError: ({ error }) => {
+                    setError(error.message);
+                },
+            }
+        );
+    };
+    const onSocial = (provider: "github" | "google") => {
+        setError(null);
+        setPending(true);
+
+        authClient.signIn.social(
+            {
+                provider: provider,
+                callbackURL: "/",
+            },
+            {
+                onSuccess: () => {
+                    setPending(false);
+                },
+                onError: ({ error }) => {
+                    setPending(false);
                     setError(error.message);
                 },
             }
@@ -142,6 +163,9 @@ const SignInView = () => {
                                             className="w-full gap-x-3"
                                             variant={"outline"}
                                             type="button"
+                                            onClick={() => {
+                                                onSocial("google");
+                                            }}
                                         >
                                             <Image
                                                 src={"/images/google-color.png"}
@@ -149,13 +173,16 @@ const SignInView = () => {
                                                 width={20}
                                                 height={20}
                                             />
-                                            Github
+                                            Google
                                         </Button>
                                         <Button
                                             disabled={pending}
                                             className="w-full gap-x-3"
                                             variant={"outline"}
                                             type="button"
+                                            onClick={() => {
+                                                onSocial("github");
+                                            }}
                                         >
                                             <Image
                                                 src={"/images/github.png"}

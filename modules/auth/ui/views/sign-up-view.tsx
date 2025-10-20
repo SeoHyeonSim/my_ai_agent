@@ -19,8 +19,8 @@ import { Alert, AlertTitle } from "@/components/ui/alert";
 import { OctagonAlertIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
 
 const formSchema = z
     .object({
@@ -61,11 +61,32 @@ const SignUnView = () => {
                 name: data.name,
                 email: data.email,
                 password: data.password,
+                callbackURL: "/",
             },
             {
                 onSuccess: () => {
                     setPending(false);
                     router.push("/");
+                },
+                onError: ({ error }) => {
+                    setPending(false);
+                    setError(error.message);
+                },
+            }
+        );
+    };
+    const onSocial = (provider: "github" | "google") => {
+        setError(null);
+        setPending(true);
+
+        authClient.signIn.social(
+            {
+                provider: provider,
+                callbackURL: "/",
+            },
+            {
+                onSuccess: () => {
+                    setPending(false);
                 },
                 onError: ({ error }) => {
                     setPending(false);
@@ -181,7 +202,7 @@ const SignUnView = () => {
                                         type="submit"
                                         className="w-full"
                                     >
-                                        Sign In
+                                        Sign Up
                                     </Button>
                                     <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t ">
                                         <span className="bg-card text-muted-foreground relative z-10 px-2">
@@ -194,6 +215,7 @@ const SignUnView = () => {
                                             className="w-full gap-x-3"
                                             variant={"outline"}
                                             type="button"
+                                            onClick={() => onSocial("google")}
                                         >
                                             <Image
                                                 src={"/images/google-color.png"}
@@ -201,13 +223,16 @@ const SignUnView = () => {
                                                 width={20}
                                                 height={20}
                                             />
-                                            Github
+                                            Google
                                         </Button>
                                         <Button
                                             disabled={pending}
                                             className="w-full gap-x-3"
                                             variant={"outline"}
                                             type="button"
+                                            onClick={() => {
+                                                onSocial("github");
+                                            }}
                                         >
                                             <Image
                                                 src={"/images/github.png"}
