@@ -17,9 +17,8 @@ export const AgentsView = () => {
             <ResponsiveDialog
                 title="Responsive test"
                 description="Hello"
-                open
+                open={false}
                 onOpenChange={() => {}}
-                
             >
                 <Button>Some Action</Button>
             </ResponsiveDialog>
