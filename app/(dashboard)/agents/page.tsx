@@ -31,7 +31,7 @@ const Page = async () => {
                 <Suspense fallback={<AgentsViewLoading />}>
                     <AgnetsListHeader />
                     <ErrorBoundary fallback={<AgentsViewError />}>
-                        <AgentsView open={false} />
+                        <AgentsView />
                     </ErrorBoundary>
                 </Suspense>
             </HydrationBoundary>
