@@ -2,29 +2,39 @@
 
 import ErrorState from "@/components/error-state";
 import LoadingState from "@/components/loading-state";
-import ResponsiveDialog from "@/components/responsive-dialog";
-import { Button } from "@/components/ui/button";
 import { useTRPC } from "@/trpc/client";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import React from "react";
+import { DataTable } from "../components/data-table";
+import { columns } from "../components/columns";
+import EmptyState from "@/components/empty-state";
 
 export const AgentsView = () => {
     const trpc = useTRPC();
     const { data } = useSuspenseQuery(trpc.agents.getMany.queryOptions());
 
     return (
-        <div>
-            <ResponsiveDialog
-                title="Responsive test"
-                description="Hello"
-                open={false}
-                onOpenChange={() => {}}
-            >
-                <Button>Some Action</Button>
-            </ResponsiveDialog>
-
-            {JSON.stringify(data, null, 2)}
+        <div className="flex-1  pb-4 px-4 md:px-8 flex-col gap-y-7">
+            <DataTable data={data} columns={columns} />
+            {data.length === 0 && (
+                <EmptyState
+                    title="Create you first agent"
+                    description="Create an agent to join your meetings. Each agent will follow your instructions and can interact with participation during the call"
+                />
+            )}
         </div>
+        // <div>
+        //     <ResponsiveDialog
+        //         title="Responsive test"
+        //         description="Hello"
+        //         open={false}
+        //         onOpenChange={() => {}}
+        //     >
+        //         <Button>Some Action</Button>
+        //     </ResponsiveDialog>
+
+        //     {JSON.stringify(data, null, 2)}
+        // </div>
     );
 };
 

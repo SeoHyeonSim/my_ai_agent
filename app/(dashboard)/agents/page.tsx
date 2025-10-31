@@ -4,7 +4,7 @@ import {
     AgentsViewError,
     AgentsViewLoading,
 } from "@/modules/agents/ui/views/agents-view";
-import AgnetsListHeader from "@/modules/agents/ui/views/components/agents-list-header";
+import AgnetsListHeader from "@/modules/agents/ui/components/agents-list-header";
 import { getQueryClient, trpc } from "@/trpc/server";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { headers } from "next/headers";
@@ -26,7 +26,6 @@ const Page = async () => {
 
     return (
         <>
-            <AgnetsListHeader />
             <HydrationBoundary state={dehydrate(queryCilent)}>
                 <Suspense fallback={<AgentsViewLoading />}>
                     <AgnetsListHeader />
